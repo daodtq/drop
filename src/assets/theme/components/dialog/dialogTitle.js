@@ -1,0 +1,33 @@
+/**
+=========================================================
+* EGEAD Fulfilment POD - v2.2.0
+=========================================================
+
+* Product Page: https://www.egeadcompany.com/product/material-dashboard-react
+* Copyright 2023 Dev Egead Company (https://www.egeadcompany.com)
+
+Coded by www.egeadcompany.com
+
+ =========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+*/
+
+// EGEAD Fulfilment POD base styles
+import typography from "assets/theme/base/typography";
+
+// EGEAD Fulfilment POD helper functions
+import pxToRem from "assets/theme/functions/pxToRem";
+
+const { size } = typography;
+
+const dialogTitle = {
+  styleOverrides: {
+    root: {
+      padding: pxToRem(16),
+      fontSize: size.xl,
+    },
+  },
+};
+
+export default dialogTitle;
