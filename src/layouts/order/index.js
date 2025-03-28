@@ -126,7 +126,7 @@ function Tables() {
                           <td rowSpan={item?.variation.length + 1} className="title"><a href={item?.url}>{item?.title}</a><br />
                             <div className="category-brand"><span className="category">Categories: </span>{item?.categories}<br /><span className="brand">Brand: </span>{item?.brand}</div>
                           </td>
-                          <td rowSpan={item?.variation.length + 1}>{item?.image ? <img src={item?.image?.[0]} alt={item?.title} className="image" /> : null}</td>
+                          <td rowSpan={item?.variation.length + 1}>{item?.image.length ? <img src={item?.image?.[0]} alt={item?.title} className="image" /> : item.note ? <span style={{ color: "red", fontWeight: "bold" }}>{item.note}</span> : <span>{item.note}</span>}</td>
                           <td rowSpan={item?.variation.length + 1}>{item?.link ? <a href={item?.link} target="_blank" rel="noopener noreferrer">Link Web</a> : "none"}</td>
                           <td rowSpan={item?.variation.length + 1}>
                             <BorderColorIcon fontSize="medium" onClick={() => handleOpenEdit(item)} style={{ cursor: "pointer", color: "#1976d2", marginRight: 10 }} />
