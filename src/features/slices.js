@@ -100,6 +100,23 @@ const userSlice = createSlice({
         NotificationManager.error('Server not responding!', 'Error', 1000);
         state.products = []
       })
+      .addCase(editProducts.fulfilled, (state, action) => {
+        const res = action.payload;
+        if (res.status == true) {
+          state.products = res.products;
+        } else {
+          NotificationManager.error(res.message, 'Error', 1000);
+        }
+        state.isLoading = false
+      })
+      .addCase(editProducts.pending, (state, action) => {
+        state.isLoading = true
+      })
+      .addCase(editProducts.rejected, (state, action) => {
+        state.isLoading = false
+        NotificationManager.error('Server not responding!', 'Error', 1000);
+        state.products = []
+      })
   },
 });
 
@@ -107,6 +124,15 @@ const userSlice = createSlice({
 export const addProducts = createAsyncThunk("drop/addProducts", async (newTodo, { dispatch }) => {
   try {
     const res = await POST("/addproducts", newTodo);
+    return res.data;
+  } catch (error) {
+    throw error;
+  }
+});
+
+export const editProducts = createAsyncThunk("drop/editProducts", async (newTodo, { dispatch }) => {
+  try {
+    const res = await POST("/editproducts", newTodo);
     return res.data;
   } catch (error) {
     throw error;

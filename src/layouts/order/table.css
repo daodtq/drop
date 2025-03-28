@@ -30,6 +30,7 @@
 .table-row td {
   padding: 5px;
   border: 1px solid #ddd;
+  text-align: center;
 }
 
 .title {
@@ -63,7 +64,6 @@
 
 .variation-details {
   display: flex;
-  align-items: center;
 }
 
 .variant-image {
@@ -84,7 +84,7 @@
 }
 
 .old-price {
-  text-decoration: line-through;
+  /* text-decoration: line-through; */
   color: red;
 }
 
@@ -110,20 +110,19 @@
   color: #888;
   font-style: italic;
 }
-.red-background > .variation{
+.red-background > .change-color{
   background-color: rgb(255, 190, 190)!important;
 }
 
-.green-background > .variation{
+.green-background > .change-color{
   background-color: #bee1ff!important;
 }
 
-.alert-background > .variation{
+.alert-background > .change-color2{
   background-color: rgb(255, 0, 0)!important;
 }
 
-.alert-background > .variation, .alert-background > .variation > span{
-  background-color: rgb(255, 0, 0)!important;
+.alert-background > .change-color2, .alert-background > .change-color2 > span{
   color: white!important;
 }
 
