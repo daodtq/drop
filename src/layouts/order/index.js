@@ -72,9 +72,11 @@ function Tables() {
   };
 
   const handleSellerPriceChange = (index, value) => {
-    const updatedVariations = [...variations];
-    updatedVariations[index].sellerprice = value;
-    setVariations(updatedVariations);
+    setVariations(prevVariations =>
+      prevVariations.map((variation, i) =>
+        i === index ? { ...variation, sellerprice: value } : variation
+      )
+    );
   };
 
   const handleStockChange = (index) => {
