@@ -3,7 +3,7 @@ import { NotificationManager } from "react-notifications";
 import { GET, POST } from "../api";
 const userSlice = createSlice({
   name: "drop",
-  initialState: { type: false, datauser: [], status: "idle", user: "", isLoggedIn: false, time: null, hash: null, isLoading: false, name: "", products: [] },
+  initialState: { type: false, datauser: [], status: "idle", user: "", isLoggedIn: false, time: null, hash: null, isLoading: false, name: "", startDate: new Date().toISOString(), endDate: new Date().toISOString(), products: [], dashboard: {} },
   reducers: {
     // IMMER
     addTodo: (state, action) => {
@@ -28,6 +28,10 @@ const userSlice = createSlice({
       state.time = action.payload.time;
       state.hash = action.payload.hash;
       state.email = action.payload.email;
+    }, setEndDate(state, action) {
+      state.endDate = action.payload;
+    }, setStartDate(state, action) {
+      state.startDate = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -79,6 +83,23 @@ const userSlice = createSlice({
         state.isLoading = true
       })
       .addCase(addProducts.rejected, (state, action) => {
+        state.isLoading = false
+        NotificationManager.error('Server not responding!', 'Error', 1000);
+        state.products = []
+      })
+      .addCase(getDashboard.fulfilled, (state, action) => {
+        const res = action.payload;
+        if (res.status == true) {
+          state.dashboard = res.result;
+        } else {
+          NotificationManager.error(res.message, 'Error', 1000);
+        }
+        state.isLoading = false
+      })
+      .addCase(getDashboard.pending, (state, action) => {
+        state.isLoading = true
+      })
+      .addCase(getDashboard.rejected, (state, action) => {
         state.isLoading = false
         NotificationManager.error('Server not responding!', 'Error', 1000);
         state.products = []
@@ -162,11 +183,23 @@ export const getProducts = createAsyncThunk("drop/getproducts", async (newTodo) 
   return res.data;
 });
 
+export const getDashboard = createAsyncThunk("drop/getDashboard", async (newTodo) => {
+  const res = await GET("/getdashboard", newTodo);
+  return res.data;
+});
+
 export const updateLoading = (date) => (dispatch) => {
   dispatch(setLoading(date));
 };
 
+export const updateStartDate = (date) => (dispatch) => {
+  dispatch(setStartDate(date));
+};
+
+export const updateEndDate = (date) => (dispatch) => {
+  dispatch(setEndDate(date));
+};
 
 
-export const { loginSuccess, logout, setTimeHash, setLoading } = userSlice.actions;
+export const { loginSuccess, logout, setTimeHash, setLoading, setStartDate, setEndDate } = userSlice.actions;
 export default userSlice;

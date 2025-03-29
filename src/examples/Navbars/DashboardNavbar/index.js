@@ -32,6 +32,7 @@ import "react-datepicker/dist/react-datepicker.css";
 // EGEAD Fulfilment POD example components
 import { styled } from '@mui/material/styles';
 import Breadcrumbs from "examples/Breadcrumbs";
+import DatePicker from "react-datepicker";
 import NotificationItem from "examples/Items/NotificationItem";
 // Custom styles for DashboardNavbar
 import {
@@ -54,6 +55,11 @@ import { getProducts } from "features/slices";
 import { useDispatch, useSelector } from "react-redux";
 import MDButton from "components/MDButton";
 import { addProducts } from "features/slices";
+import MDTypography from "components/MDTypography";
+import { updateStartDate } from "features/slices";
+import { updateEndDate } from "features/slices";
+import { getDashboard } from "features/slices";
+import moment from "moment";
 const CustomTextField = styled(TextField)(({ theme, search }) => ({
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
@@ -71,6 +77,8 @@ const CustomTextField = styled(TextField)(({ theme, search }) => ({
 function DashboardNavbar({ absolute, light, isMini }) {
   const name = useSelector((state) => state.drop.name);
   const products = useSelector((state) => state.drop.products);
+  const startDate = useSelector((state) => state.drop.startDate);
+  const endDate = useSelector((state) => state.drop.endDate);
   const order_status = useSelector((state) => state.drop.order_status);
   const [navbarType, setNavbarType] = useState("relative");
   const [controller, dispatch] = useMaterialUIController();
@@ -162,6 +170,14 @@ function DashboardNavbar({ absolute, light, isMini }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleChangeDate = (type, value) => {
+    if (type == "startDate") {
+      dispatch2(updateStartDate(value));
+    } else {
+      dispatch2(updateEndDate(value));
+    }
+  };
+
   const handleSubmit = async () => {
     const res = await dispatch2(addProducts({ ...formData, name, status: false }))
     if (res.payload.status) {
@@ -172,7 +188,8 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const dispatch2 = useDispatch();
   useEffect(() => {
     dispatch2(getProducts({ name, status: false }))
-  }, []);
+    dispatch2(getDashboard({ name, startDate: moment(startDate).startOf("day").format("x"), endDate: moment(endDate).endOf("day").format("x"), }))
+  }, [startDate, endDate]);
 
   return (
     <AppBar
@@ -191,8 +208,31 @@ function DashboardNavbar({ absolute, light, isMini }) {
 
         </MDBox>
         <MDBox sx={{ display: "flex", flexDirection: "row", width: "70%", alignItems: "center" }}>
-
-          <FormControl sx={{ margin: 1, width: "15%" }}>
+          <div className="form-group">
+            <MDTypography variant="h6" style={{ marginRight: 5 }}>From </MDTypography>
+            <DatePicker
+              placeholderText="DD/MM/YYYY"
+              dateFormat="dd/MM/yyyy"
+              id="start-date"
+              autoComplete="off"
+              selected={startDate}
+              className="custom-datepicker"
+              onChange={(e) => handleChangeDate("startDate", e)}
+            />
+          </div>
+          <div className="form-group">
+            <MDTypography variant="h6" style={{ marginRight: 5, marginLeft: 5 }}>To </MDTypography>
+            <DatePicker
+              placeholderText="DD/MM/YYYY"
+              dateFormat="dd/MM/yyyy"
+              id="start-date"
+              autoComplete="off"
+              selected={endDate}
+              className="custom-datepicker"
+              onChange={(e) => handleChangeDate("endDate", e)}
+            />
+          </div>
+          {/* <FormControl sx={{ margin: 1, width: "15%" }}>
             <InputLabel>Fulfil Status</InputLabel>
             <Select
               label="Fulfil Status"
@@ -206,7 +246,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
                 </MenuItem>
               ))}
             </Select>
-          </FormControl>
+          </FormControl> */}
           <MDButton sx={{ margin: 1 }} color={"dark"} onClick={handleOpen}>
             Add Product<AddIcon
               style={{ cursor: "pointer" }}
