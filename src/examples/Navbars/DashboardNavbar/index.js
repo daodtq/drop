@@ -217,7 +217,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
     XLSX.writeFile(wb, `Drop_${moment().format("DD/MM")}_${moment().unix()}.csv`);
-    // await dispatch2(updateUpload())
+    await dispatch2(updateUpload())
   };
 
   const dispatch2 = useDispatch();
