@@ -138,6 +138,17 @@ const userSlice = createSlice({
         NotificationManager.error('Server not responding!', 'Error', 1000);
         state.products = []
       })
+      .addCase(updateUpload.fulfilled, (state, action) => {
+        state.isLoading = false
+      })
+      .addCase(updateUpload.pending, (state, action) => {
+        state.isLoading = true
+      })
+      .addCase(updateUpload.rejected, (state, action) => {
+        state.isLoading = false
+        NotificationManager.error('Server not responding!', 'Error', 1000);
+        state.products = []
+      })
   },
 });
 
@@ -185,6 +196,11 @@ export const getProducts = createAsyncThunk("drop/getproducts", async (newTodo) 
 
 export const getDashboard = createAsyncThunk("drop/getDashboard", async (newTodo) => {
   const res = await GET("/getdashboard", newTodo);
+  return res.data;
+});
+
+export const updateUpload = createAsyncThunk("drop/updateUpload", async (newTodo, { dispatch }) => {
+  const res = await GET("/updateupload", newTodo);
   return res.data;
 });
 

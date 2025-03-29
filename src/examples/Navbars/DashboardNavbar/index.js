@@ -57,9 +57,12 @@ import MDButton from "components/MDButton";
 import { addProducts } from "features/slices";
 import MDTypography from "components/MDTypography";
 import { updateStartDate } from "features/slices";
+import * as XLSX from 'xlsx';
 import { updateEndDate } from "features/slices";
 import { getDashboard } from "features/slices";
 import moment from "moment";
+import header from "./constants";
+import { updateUpload } from "features/slices";
 const CustomTextField = styled(TextField)(({ theme, search }) => ({
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
@@ -185,6 +188,38 @@ function DashboardNavbar({ absolute, light, isMini }) {
     }
   };
 
+
+  const handleExport = async () => {
+    let newData = []
+    for (const [indexData, row] of products.entries()) {
+      if (!row.image || !row.variation || !row.variation.length || !row.image.length) {
+        continue
+      }
+      let variable = row.variation
+      for (let index = 0; index < variable.length; index++) {
+        const _variable = variable[index]
+        if (index == 0) {
+          newData.push([row.variation[0].sku, row.variation[0].sku, row.variation[0].sku, row.title.replace(/\r|\n/g, ""), row?.description.replace(/\r|\n/g, ""), "", `${row.categories.replace(/\r|\n/g, "")}, Brand ${row.brand}`, `${row.categories.replace(/\r|\n/g, "")}, Brand ${row.brand}`, "", "TRUE", "", "", _variable.name, _variable.value, "", "", "", "", row.variation[0].sku, "0", "", "", "continue", "manual", _variable.sellerprice, "", "TRUE", "FALSE", "", row.image[0], 1, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", _variable.image, "kg", "", 0, "TRUE", "TRUE", "Default", "", "", "", "", "", "", ""])
+        } else {
+          let newValue = [row.variation[0].sku, row.variation[0].sku, row.variation[0].sku, "", "", "", "", "", "", "", "", "", "", _variable.value, "", "", "", "", _variable.sku, 0, "", "", "continue", "manual", _variable.price, "", "TRUE", "FALSE", "", row.image?.[index] || "", row.image?.[index] ? index + 1 : "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", _variable.image, "kg", "", 0, "TRUE", "TRUE", "Default", "", "", "", "", "", 0, 0]
+          newData.push(newValue)
+        }
+      }
+      if (row.image.length > variable.length) {
+        for (let i = variable.length; i < row.image.length; i++) {
+          let newValue = ["", "", row.variation[0].sku, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", row.image?.[i] || "", row.image?.[i] ? i + 1 : ""]
+          newData.push(newValue)
+        }
+      }
+
+    }
+    const ws = XLSX.utils.aoa_to_sheet([header, ...newData]);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+    XLSX.writeFile(wb, `Drop_${moment().format("DD/MM")}_${moment().unix()}.csv`);
+    // await dispatch2(updateUpload())
+  };
+
   const dispatch2 = useDispatch();
   useEffect(() => {
     dispatch2(getProducts({ name, status: false }))
@@ -251,9 +286,16 @@ function DashboardNavbar({ absolute, light, isMini }) {
             Add Product<AddIcon
               style={{ cursor: "pointer" }}
               fontSize="large"
-              color={"warning"}
+              color={"warning"} handleExport
 
             /></MDButton>
+          {name == "DAO" ? <MDButton sx={{ margin: 1 }} color={"dark"} onClick={handleExport}>
+            Export<AddIcon
+              style={{ cursor: "pointer" }}
+              fontSize="large"
+              color={"warning"}
+
+            /></MDButton> : null}
         </MDBox>
         {isMini ? null : (
           <MDBox sx={(theme) => navbarRow(theme, { isMini })}>
