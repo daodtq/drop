@@ -204,7 +204,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
         if (index == 0) {
           newData.push([row.variation[0].sku, row.variation[0].sku, row.variation[0].sku, row.title.replace(/\r|\n/g, ""), row?.description.replace(/\r|\n/g, ""), "", `${row.categories.replace(/\r|\n/g, "")}, Brand ${row.brand}`, `${row.categories.replace(/\r|\n/g, "")}, Brand ${row.brand}`, "", "TRUE", "", "", _variable.name, _variable.value, "", "", "", "", row.variation[0].sku, "0", "", "", "continue", "manual", _variable.sellerprice, "", "TRUE", "FALSE", "", row.image[0], 1, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", _variable.image, "kg", "", 0, "TRUE", "TRUE", "Default", "", "", "", "", "", "", ""])
         } else {
-          let newValue = [row.variation[0].sku, row.variation[0].sku, row.variation[0].sku, "", "", "", "", "", "", "", "", "", "", _variable.value, "", "", "", "", _variable.sku, 0, "", "", "continue", "manual", _variable.price, "", "TRUE", "FALSE", "", row.image?.[index] || "", row.image?.[index] ? index + 1 : "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", _variable.image, "kg", "", 0, "TRUE", "TRUE", "Default", "", "", "", "", "", 0, 0]
+          let newValue = [row.variation[0].sku, row.variation[0].sku, row.variation[0].sku, "", "", "", "", "", "", "", "", "", "", _variable.value, "", "", "", "", _variable.sku, 0, "", "", "continue", "manual", _variable.sellerprice, "", "TRUE", "FALSE", "", row.image?.[index] || "", row.image?.[index] ? index + 1 : "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", _variable.image, "kg", "", 0, "TRUE", "TRUE", "Default", "", "", "", "", "", 0, 0]
           newData.push(newValue)
         }
       }
