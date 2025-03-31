@@ -192,6 +192,9 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const handleExport = async () => {
     let newData = []
     for (const [indexData, row] of products.entries()) {
+      if (row.link) {
+        continue
+      }
       if (!row.image || !row.variation || !row.variation.length || !row.image.length) {
         continue
       }
