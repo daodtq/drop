@@ -63,6 +63,7 @@ import { getDashboard } from "features/slices";
 import moment from "moment";
 import header from "./constants";
 import { updateUpload } from "features/slices";
+import { getAds } from "features/slices";
 const CustomTextField = styled(TextField)(({ theme, search }) => ({
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
@@ -226,7 +227,13 @@ function DashboardNavbar({ absolute, light, isMini }) {
   const dispatch2 = useDispatch();
   useEffect(() => {
     dispatch2(getProducts({ name, status: false }))
+  }, []);
+
+  useEffect(() => {
     dispatch2(getDashboard({ name, startDate: moment(startDate).startOf("day").format("x"), endDate: moment(endDate).endOf("day").format("x"), }))
+    dispatch2(
+      getAds({ from: moment(startDate).format("DD/MM/YYYY"), to: moment(endDate).format("DD/MM/YYYY") })
+    );
   }, [startDate, endDate]);
 
   return (

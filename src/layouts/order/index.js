@@ -136,7 +136,7 @@ function Tables() {
                           </td>
                         </tr>
                         {item?.variation.map((variant, vIndex) => (
-                          <tr key={vIndex} className={variant?.sellerprice == variant?.price || variant?.sellerprice == variant?.oldprice ? "variation-row alert-background" : variant?.price > variant?.oldprice ? "variation-row red-background" : variant?.price < variant?.oldprice ? "variation-row green-background" : "variation-row"}>
+                          <tr key={vIndex} className={variant?.sellerprice == variant?.price || variant?.sellerprice <= variant?.oldprice ? "variation-row alert-background" : variant?.price > variant?.oldprice ? "variation-row red-background" : variant?.price < variant?.oldprice ? "variation-row green-background" : "variation-row"}>
                             <td className="name variation">{variant?.value}</td>
                             <td className="variation change-color"> <span className="price" >${variant?.price}</span></td>
                             <td className="variation change-color"> <span className="old-price" >${variant?.oldprice}</span></td>

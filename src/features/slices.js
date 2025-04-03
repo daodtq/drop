@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { NotificationManager } from "react-notifications";
 import { GET, POST } from "../api";
+import { POST2 } from "api/index2";
 const userSlice = createSlice({
   name: "drop",
-  initialState: { type: false, datauser: [], status: "idle", user: "", isLoggedIn: false, time: null, hash: null, isLoading: false, name: "", startDate: new Date().toISOString(), endDate: new Date().toISOString(), products: [], dashboard: {} },
+  initialState: { type: false, datauser: [], status: "idle", user: "", isLoggedIn: false, time: null, hash: null, isLoading: false, name: "", startDate: new Date().toISOString(), endDate: new Date().toISOString(), products: [], dashboard: {}, data2: [], product2: [] },
   reducers: {
     // IMMER
     addTodo: (state, action) => {
@@ -149,6 +150,18 @@ const userSlice = createSlice({
         NotificationManager.error('Server not responding!', 'Error', 1000);
         state.products = []
       })
+      .addCase(getAds.fulfilled, (state, action) => {
+        const res = action.payload;
+        if (res?.status != 1) {
+          state.data2 = res?.data;
+          state.product2 = res?.products
+        }
+      })
+      .addCase(getAds.pending, (state, action) => {
+      })
+      .addCase(getAds.rejected, (state, action) => {
+        NotificationManager.error('Lổi Server, liên hệ IT nhé!', 'Error', 3000);
+      })
   },
 });
 
@@ -201,6 +214,11 @@ export const getDashboard = createAsyncThunk("drop/getDashboard", async (newTodo
 
 export const updateUpload = createAsyncThunk("drop/updateUpload", async (newTodo, { dispatch }) => {
   const res = await GET("/updateupload", newTodo);
+  return res.data;
+});
+
+export const getAds = createAsyncThunk("drop/listads", async (newTodo) => {
+  const res = await POST2("/list_adsdrop", newTodo);
   return res.data;
 });
 

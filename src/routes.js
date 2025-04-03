@@ -42,6 +42,7 @@ import Tables from "layouts/order";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
+import Ads from "layouts/ads";
 
 const routes = [
   {
@@ -59,6 +60,15 @@ const routes = [
     icon: <Icon fontSize="small">table_view</Icon>,
     route: "/products",
     component: <Tables />,
+  }
+  ,
+  {
+    type: "collapse",
+    name: "Ads",
+    key: "ads",
+    icon: <Icon fontSize="small">money</Icon>,
+    route: "/ads",
+    component: <Ads />,
   },
   {
     type: "collapse",
