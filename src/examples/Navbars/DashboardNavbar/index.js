@@ -20,20 +20,22 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
 // @material-ui core components
+import AddIcon from '@mui/icons-material/Add';
 import AppBar from "@mui/material/AppBar";
 import Icon from "@mui/material/Icon";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import Toolbar from "@mui/material/Toolbar";
-import AddIcon from '@mui/icons-material/Add';
 // EGEAD Fulfilment POD components
+import { FormControl } from '@mui/material';
 import MDBox from "components/MDBox";
 import "react-datepicker/dist/react-datepicker.css";
 // EGEAD Fulfilment POD example components
+import { FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Breadcrumbs from "examples/Breadcrumbs";
-import DatePicker from "react-datepicker";
 import NotificationItem from "examples/Items/NotificationItem";
+import DatePicker from "react-datepicker";
 // Custom styles for DashboardNavbar
 import {
   navbar,
@@ -44,26 +46,20 @@ import {
 } from "examples/Navbars/DashboardNavbar/styles";
 
 // EGEAD Fulfilment POD context
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
+import MDButton from "components/MDButton";
+import MDTypography from "components/MDTypography";
 import {
   setMiniSidenav,
   setOpenConfigurator,
   setTransparentNavbar,
   useMaterialUIController,
 } from "context";
-import { getProducts } from "features/slices";
-import { useDispatch, useSelector } from "react-redux";
-import MDButton from "components/MDButton";
-import { addProducts } from "features/slices";
-import MDTypography from "components/MDTypography";
-import { updateStartDate } from "features/slices";
-import * as XLSX from 'xlsx';
-import { updateEndDate } from "features/slices";
-import { getDashboard } from "features/slices";
+import { addProducts, getAds, getDashboard, getProducts, updateEndDate, updateStartDate, updateUpload } from "features/slices";
 import moment from "moment";
+import { useDispatch, useSelector } from "react-redux";
+import * as XLSX from 'xlsx';
 import header from "./constants";
-import { updateUpload } from "features/slices";
-import { getAds } from "features/slices";
 const CustomTextField = styled(TextField)(({ theme, search }) => ({
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
@@ -158,11 +154,11 @@ function DashboardNavbar({ absolute, light, isMini }) {
   //handle
   const [open, setOpen] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
-  const [formData, setFormData] = useState({ title: "", url: "", gtin: "", brand: "" });
+  const [formData, setFormData] = useState({ title: "", url: "", gtin: "", brand: "", radius: "" });
 
   const handleOpen = (item) => {
     setCurrentItem(item);
-    setFormData({ title: item.title || "", url: item.url || "", gtin: item.gtin || "", brand: item.brand || "", categories: item.brand || "" });
+    setFormData({ title: item.title || "", url: item.url || "", gtin: item.gtin || "", brand: item.brand || "", categories: item.brand || "", radius: "Curtscustoms" || "" });
     setOpen(true);
   };
 
@@ -346,9 +342,21 @@ function DashboardNavbar({ absolute, light, isMini }) {
         <DialogContent>
           <TextField fullWidth margin="dense" name="title" label="Title" value={formData.title} onChange={handleChange} required />
           <TextField fullWidth margin="dense" name="url" label="URL" value={formData.url} onChange={handleChange} required />
+          <FormControl fullWidth margin="dense" required>
+            <RadioGroup
+              row
+              name="radius"
+              value={formData.radius}
+              onChange={handleChange}
+            >
+              <FormControlLabel value="Curtscustoms" control={<Radio />} label="Curtscustoms" />
+              <FormControlLabel value="Zonemart" control={<Radio />} label="Zonemart" />
+            </RadioGroup>
+          </FormControl>
           <TextField fullWidth margin="dense" name="categories" label="Categories" value={formData.categories} onChange={handleChange} required />
           <TextField fullWidth margin="dense" name="gtin" label="GTIN" value={formData.gtin} onChange={handleChange} />
           <TextField fullWidth margin="dense" name="brand" label="Brand" value={formData.brand} onChange={handleChange} />
+
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="secondary">Huỷ</Button>
