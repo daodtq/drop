@@ -31,7 +31,7 @@ import { FormControl } from '@mui/material';
 import MDBox from "components/MDBox";
 import "react-datepicker/dist/react-datepicker.css";
 // EGEAD Fulfilment POD example components
-import { FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material';
+import { FormControlLabel, Autocomplete, Radio, RadioGroup } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Breadcrumbs from "examples/Breadcrumbs";
 import NotificationItem from "examples/Items/NotificationItem";
@@ -60,6 +60,7 @@ import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import * as XLSX from 'xlsx';
 import header from "./constants";
+import cate from "./constants1";
 const CustomTextField = styled(TextField)(({ theme, search }) => ({
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
@@ -166,8 +167,22 @@ function DashboardNavbar({ absolute, light, isMini }) {
     setOpen(false);
   };
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+  const handleChange = (event, value) => {
+    console.log(event, value)
+    // console.log({ [e.target.name]: e.target.value })
+    // setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (event?.target) {
+      const { name, value } = event.target;
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        categories: value,
+      }));
+    }
   };
 
   const handleChangeDate = (type, value) => {
@@ -353,7 +368,17 @@ function DashboardNavbar({ absolute, light, isMini }) {
               <FormControlLabel value="Zonemart" control={<Radio />} label="Zonemart" />
             </RadioGroup>
           </FormControl>
-          <TextField fullWidth margin="dense" name="categories" label="Categories" value={formData.categories} onChange={handleChange} required />
+          <Autocomplete
+            sx={{ marginTop: 1, marginBottom: 0.5 }}
+            options={cate}
+            value={formData.categories || null}
+            onChange={(event, newValue) =>
+              handleChange(event = {}, newValue)
+            }
+            renderInput={(params) => (
+              <TextField {...params} label="Category" variant="outlined" />
+            )}
+          />
           <TextField fullWidth margin="dense" name="gtin" label="GTIN" value={formData.gtin} onChange={handleChange} />
           <TextField fullWidth margin="dense" name="brand" label="Brand" value={formData.brand} onChange={handleChange} />
 
