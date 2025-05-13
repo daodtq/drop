@@ -202,8 +202,25 @@ function DashboardNavbar({ absolute, light, isMini }) {
 
 
   const handleExport = async () => {
+
+    const curtcustom = [];
+    const zonemart = [];
+
+    products.forEach(product => {
+      product.store.forEach(([storeName]) => {
+        if (storeName === "Curtscustoms") {
+          curtcustom.push(product);
+        }
+        if (storeName === "Zonemart") {
+          zonemart.push(product);
+        }
+      });
+    });
+    console.log("Curtscustoms:", curtcustom);
+    console.log("Zonemarts:", zonemart);
+
     let newData = []
-    for (const [indexData, row] of products.entries()) {
+    for (const [indexData, row] of curtcustom.entries()) {
       if (row.link) {
         continue
       }
@@ -231,7 +248,38 @@ function DashboardNavbar({ absolute, light, isMini }) {
     const ws = XLSX.utils.aoa_to_sheet([header, ...newData]);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
-    XLSX.writeFile(wb, `Drop_${moment().format("DD/MM")}_${moment().unix()}.csv`);
+    XLSX.writeFile(wb, `Curtcustoms_${moment().format("DD/MM")}_${moment().unix()}.csv`);
+
+    let newData2 = []
+    for (const [indexData, row] of zonemart.entries()) {
+      if (row.link) {
+        continue
+      }
+      if (!row.image || !row.variation || !row.variation.length || !row.image.length) {
+        continue
+      }
+      let variable = row.variation
+      for (let index = 0; index < variable.length; index++) {
+        const _variable = variable[index]
+        if (index == 0) {
+          newData2.push([row.variation[0].sku, row.variation[0].sku, row.variation[0].sku, row.title.replace(/\r|\n/g, ""), row?.description.replace(/\r|\n/g, ""), "", `${row.categories.replace(/\r|\n/g, "")}, Brand ${row.brand}`, `${row.categories.replace(/\r|\n/g, "")}, Brand ${row.brand}`, "", "TRUE", "", "", _variable.name, _variable.value, "", "", "", "", row.variation[0].sku, "0", "", "", "continue", "manual", _variable.sellerprice, "", "TRUE", "FALSE", "", row.image[0], 1, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", _variable.image, "kg", "", 0, "TRUE", "TRUE", "Default", "", "", "", "", "", "", ""])
+        } else {
+          let newValue = [row.variation[0].sku, row.variation[0].sku, row.variation[0].sku, "", "", "", "", "", "", "", "", "", "", _variable.value, "", "", "", "", _variable.sku, 0, "", "", "continue", "manual", _variable.sellerprice, "", "TRUE", "FALSE", "", row.image?.[index] || "", row.image?.[index] ? index + 1 : "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", _variable.image, "kg", "", 0, "TRUE", "TRUE", "Default", "", "", "", "", "", 0, 0]
+          newData2.push(newValue)
+        }
+      }
+      if (row.image.length > variable.length) {
+        for (let i = variable.length; i < row.image.length; i++) {
+          let newValue = ["", "", row.variation[0].sku, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", row.image?.[i] || "", row.image?.[i] ? i + 1 : ""]
+          newData2.push(newValue)
+        }
+      }
+
+    }
+    const ws2 = XLSX.utils.aoa_to_sheet([header, ...newData2]);
+    const wb2 = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb2, ws2, 'Sheet1');
+    XLSX.writeFile(wb2, `Zonemart_${moment().format("DD/MM")}_${moment().unix()}.csv`);
     await dispatch2(updateUpload())
   };
 
