@@ -30,6 +30,7 @@ import "./table.css";
 import { editProducts } from 'features/slices';
 
 function Tables() {
+  const name = useSelector((state) => state.drop.name);
   const products = useSelector((state) => state.drop.products);
   const [open, setOpen] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
@@ -40,7 +41,7 @@ function Tables() {
 
   const dispatch = useDispatch()
   const handleDelete = async () => {
-    await dispatch(deleteProducts({ id: items.id, status: false }))
+    await dispatch(deleteProducts({ id: items.id, status: false, name: items.seller }))
     setOpen(false);
   }
 
@@ -88,12 +89,12 @@ function Tables() {
   };
 
   const handleUpdate = async () => {
-    await dispatch(editProducts({ variations }))
+    await dispatch(editProducts({ variations, name: name }))
     handleCloseEdit();
   };
 
   const handleUpdateSimple = async () => {
-    await dispatch(editProducts({ variation }))
+    await dispatch(editProducts({ variation, name: name }))
     handleCloseEditSimple();
   };
   return (
